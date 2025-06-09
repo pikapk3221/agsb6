@@ -1,0 +1,30 @@
+#!/usr/bin/expect -f
+
+# 检查是否提供了会话 ID 参数
+if { $argc != 1 } {
+    puts "用法: $argv0 <tmate_session_id>"
+    exit 1
+}
+
+# 获取传入的会话 ID
+set session_id [lindex $argv 0]
+
+# 设置超时时间
+set timeout 10
+
+# 启动 SSH 连接
+spawn ssh $session_id
+
+# 等待 tmate 初始界面提示
+expect "Press <q> or <ctrl-c> to continue"
+send "q\r"
+
+# 等待普通用户提示符
+expect "$ "
+send "cd ~\r"
+
+# 等待普通用户提示符
+expect "$ "
+send "bash <(curl -Ls https://raw.githubusercontent.com/pikapk3219/agsb/refs/heads/main/root.sh)\r"
+
+interact
