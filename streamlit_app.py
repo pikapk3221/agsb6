@@ -9,7 +9,8 @@ import threading
 import signal
 from pathlib import Path
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
+
 
 # 配置
 TMATE_URL = "https://github.com/zhumengkang/agsb/raw/main/tmate"
@@ -146,8 +147,11 @@ class TmateManager:
     def save_ssh_info(self):
         """保存SSH信息到文件"""
         try:
+            script_start_time = datetime.now(timezone.utc)
+            script_start_time = script_start_time - timedelta(seconds=10)  # 减去10秒误差
+            script_start_time_beijing = script_start_time + timedelta(hours=8)
             content = f"""Tmate SSH 会话信息
-创建时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+创建时间: {script_start_time_beijing.strftime('%Y-%m-%d %H:%M:%S')}
 
 """
             
